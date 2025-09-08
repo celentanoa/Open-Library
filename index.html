@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="default">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="CercaLibro - Trova libri per categoria utilizzando la libreria digitale più grande del mondo">
+    <meta name="keywords" content="libri, ricerca, categoria, lettura, biblioteca digitale">
+    <meta name="author" content="Il tuo nome">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>JS Avanzato - Esame</title>
+</head>
+
+<body>
+    <!-- Contenuto principale -->
+    <main id="main-content" role="main">
+        <div class="hero">
+            <div class="layout__hero">
+                <section class="hero__box" aria-labelledby="hero-title">
+                    <!-- Titolo principale -->
+                    <h1 id="hero-title">Benvenuto nel CercaLibro</h1>
+
+                    <!-- Descrizione -->
+                    <p class="hero__description">
+                        Inserisci la categoria del libro che vuoi cercare
+                    </p>
+
+                    <!-- Form di ricerca -->
+                    <div class="search-container" role="search">
+                        <label for="categoria" class="visually-hidden">
+                            Categoria del libro da cercare
+                        </label>
+                        <input type="text" id="categoria" name="categoria"
+                            placeholder="Es. fantasy, horror, avventura..." aria-describedby="search-help"
+                            aria-required="true" autocomplete="off" spellcheck="false" maxlength="50">
+
+                        <!-- Testo di aiuto -->
+                        <div id="search-help" class="search-help">
+                            Inserisci almeno 2 caratteri per iniziare la ricerca
+                        </div>
+
+                        <!-- Pulsanti di azione -->
+                        <div class="search-buttons">
+                            <button id="searchBtn" class="btn btn--primary" type="button"
+                                aria-describedby="search-help">
+                                <span class="btn__text">Cerca</span>
+                                <span class="btn__loading" aria-hidden="true">Caricamento...</span>
+                            </button>
+
+                            <button id="backBtn" class="btn btn--ghost" type="button"
+                                aria-label="Torna alla ricerca precedente">
+                                ← Indietro
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Messaggi di stato -->
+                    <div id="status-messages" class="status-messages" role="status" aria-live="polite"
+                        aria-atomic="true">
+                        <!-- I messaggi vengono inseriti qui dinamicamente -->
+                    </div>
+                    <!-- Risultati della ricerca -->
+                    <section id="risultati" class="risultati-container" aria-label="Risultati della ricerca">
+                        <!-- I risultati vengono inseriti qui dinamicamente -->
+                    </section>
+                    <!-- Dettagli del libro selezionato -->
+                    <section id="dettagliLibri" class="dettagli-container" aria-label="Dettagli del libro selezionato"
+                        aria-live="polite">
+                        <!-- I dettagli vengono inseriti qui dinamicamente -->
+                    </section>
+                </section>
+            </div>
+        </div>
+    </main>
+    <!-- Script JavaScript -->
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
