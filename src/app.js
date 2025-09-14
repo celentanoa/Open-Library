@@ -1,3 +1,5 @@
+require("./style.css");
+
 // VARIABILI GLOBALI
 const API_URL = "https://openlibrary.org";
 const MAX_RESULTS = 12;
