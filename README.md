@@ -51,9 +51,8 @@ npm run preview       # → http://localhost:5000
 
 ---
 
-
-```bash
 ## 📁 Struttura del Progetto
+```
 .
 ├─ public/
 │  ├─ index.html            # template HTML usato da HtmlWebpackPlugin
@@ -81,6 +80,8 @@ npm run preview       # → http://localhost:5000
 └─ .gitignore               # ignora node_modules/, dist/, .firebase/
 ```
 
+---
+
 ## 🎯 Funzionalità Principali
 
 ### 🔍 Ricerca Libri
@@ -107,12 +108,37 @@ npm run preview       # → http://localhost:5000
 - Touch-friendly su dispositivi mobili
 - Adattamento automatico contenuti
 
+---
+
+## 🔧 Deploy su Firebase
+
+Prerequisiti (una tantum):
+- `firebase login`
+- `firebase init hosting`  → **public directory:** `dist`  | **SPA:** No
+
+Deploy:
+```bash
+npm run build
+firebase deploy
+```
+
+> Config inclusa: `firebase.json`, `.firebaserc`.  
+> Consigliato: header cache forte per `assets/**` (immutable, max-age 1y).
+
+---
+
+## 🆘 Troubleshooting
+- **Porta occupata (EADDRINUSE: 5173)** → `npm run dev -- --port 5174` oppure cambia `devServer.port`.
+- **PowerShell blocca npm.ps1** → usa **cmd.exe** o `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`.
+- **Webpack: "'import' may appear only with 'sourceType: module'"** → usa `require('./style.css')`, oppure aggiungi `{ test: /.js$/, type: 'javascript/auto' }`, oppure rinomina `app.js` in `app.mjs` e aggiorna l'entry.
+
+---
 
 ## 🙏 Riconoscimenti
-
 - **Open Library** per l'API gratuita
 - **Community** per feedback e suggerimenti
 - **Icone** da [Lucide Icons](https://lucide.dev/)
 
----
+## 📜 Licenza
+MIT — vedi [LICENSE](LICENSE).
 
