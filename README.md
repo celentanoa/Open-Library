@@ -1,68 +1,84 @@
 # 📚 CercaLibro
 
-> Un'applicazione web moderna per la ricerca di libri per categoria, alimentata dall'API di Open Library
+> Web app per cercare libri per **categoria** tramite Open Library — build con **Webpack 5**, deploy su **Firebase Hosting**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Webpack](https://img.shields.io/badge/Build-Webpack_5-1f78c1?logo=webpack&logoColor=white)](https://webpack.js.org/)
+[![Firebase Hosting](https://img.shields.io/badge/Hosting-Firebase-ffca28?logo=firebase&logoColor=black)](https://firebase.google.com/docs/hosting)
+
+## 🌐 Live Demo
+👉 **https://open-library-703b1.web.app**
+
+---
 
 ## 🌟 Caratteristiche
+- **🔍 Ricerca** per categoria con gestione stati (loading, error, empty)
+- **📱 Responsive** (mobile-first con Grid/Flexbox)
+- **♿ Accessibilità**: HTML semantico, ARIA, focus visibile
+- **⚡ Performance**: debounce input, rendering efficiente
+- **🧩 Build moderna**: bundling, minificazione, estrazione CSS, static assets
 
-- **🔍 Ricerca intelligente**: Trova libri per categoria con sistema di cache
-- **📱 Responsive**: Perfettamente adattato a tutti i dispositivi
-- **♿ Accessibile**: Supporto completo per screen reader e navigazione da tastiera
-- **⚡ Performance**: Caricamento veloce con debounce e ottimizzazioni
-- **🎨 UI Moderna**: Design pulito con animazioni fluide
-- **🛡️ Sicuro**: Sanitizzazione input e protezione XSS
-- **🔄 Stati dinamici**: Feedback visivo per loading, errori e successo
+---
 
-## 🚀 Demo Live
+## 🛠️ Stack
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Build**: Webpack 5 (`html-webpack-plugin`, `mini-css-extract-plugin`, `css-loader`, `style-loader`, `webpack-dev-server`)
+- **Hosting**: Firebase Hosting
+- **API**: [Open Library](https://openlibrary.org/developers/api)
 
-[Visualizza Demo](https://tuodominio.github.io/cercalibro) <!-- Sostituisci con il tuo link -->
+---
 
-## 🛠️ Tecnologie Utilizzate
+## 🚀 Avvio rapido
 
-- **Frontend**: HTML5, CSS3 (Grid/Flexbox), Vanilla JavaScript ES6+
-- **API**: [Open Library API](https://openlibrary.org/developers/api)
-- **Design**: Mobile-first, Progressive Enhancement
-- **Accessibilità**: ARIA attributes, semantic HTML
-- **Performance**: Debouncing, caching, lazy loading
+> **Requisiti:** Node.js 18+ consigliato
 
-## 🏃‍♂️ Come Usare
+```bash
+# 1) installa le dipendenze
+npm install
 
-1. **Avvia l'applicazione**:
-   ```bash
-   # Con un server locale (consigliato)
-   python -m http.server 3000
-   # oppure
-   npx serve .
-   
-   # Poi visita http://localhost:3000
-   ```
+# 2) sviluppo (autoreload)
+npm run dev           # → http://localhost:5173
 
-2. **Oppure apri direttamente**:
-   - Apri `index.html` nel browser
-   - ⚠️ Alcune funzionalità potrebbero non funzionare senza server
+# 3) build di produzione
+npm run build         # → genera /dist
 
-3. **Inizia a cercare**:
-   - Inserisci una categoria (es. "fantasy", "horror", "science")
-   - Clicca "Cerca" o premi Invio
-   - Esplora i risultati e visualizza i dettagli
-
-## 📁 Struttura del Progetto
-
+# 4) anteprima della build
+npm run preview       # → http://localhost:5000
 ```
-cercalibro/
-├── index.html              # Pagina principale
-├── assets/
-│   ├── css/
-│   │   └── style.css       # Stili principali
-│   └── js/
-│       └── app.js          # Logica applicazione
-├── screenshots/            # Screenshot per README
-├── README.md              # Questo file
-└── LICENSE                # Licenza MIT
+
+---
+
+
+```bash
+## 📁 Struttura del Progetto
+.
+├─ public/
+│  ├─ index.html            # template HTML usato da HtmlWebpackPlugin
+│  └─ 404.html              # (opzionale) pagina per URL inesistenti
+│                           # Metti qui anche favicon, robots.txt, manifest.json, ecc.
+│
+├─ src/
+│  ├─ app.js                # logica dell'app (importa gli stili)
+│  ├─ style.css             # stili principali
+│  └─ assets/               # (opzionale) immagini/font sorgente
+│      ├─ img/
+│      └─ fonts/
+│
+├─ dist/                    # (GENERATA) output di build pronto per il deploy
+│  ├─ index.html
+│  └─ assets/
+│     ├─ js/                # bundle JS (hash in produzione)
+│     └─ css/               # CSS estratto (hash in produzione)
+│
+├─ webpack.config.js        # configurazione build (dev/prod, loader, plugin)
+├─ firebase.json            # configurazione Firebase Hosting
+├─ .firebaserc              # associazione progetto Firebase
+├─ package.json             # script e dipendenze
+├─ package-lock.json
+└─ .gitignore               # ignora node_modules/, dist/, .firebase/
 ```
 
 ## 🎯 Funzionalità Principali
@@ -91,13 +107,6 @@ cercalibro/
 - Touch-friendly su dispositivi mobili
 - Adattamento automatico contenuti
 
-## 🔧 API Reference
-
-L'app utilizza l'[Open Library API](https://openlibrary.org/developers/api):
-
-## 📜 Licenza
-
-Questo progetto è sotto licenza MIT. Vedi il file [LICENSE](LICENSE) per i dettagli.
 
 ## 🙏 Riconoscimenti
 
@@ -107,7 +116,3 @@ Questo progetto è sotto licenza MIT. Vedi il file [LICENSE](LICENSE) per i dett
 
 ---
 
-<p align="center">
-  Fatto con ❤️ in Italia<br>
-  <sub>⭐ Lascia una stella se il progetto ti è piaciuto!</sub>
-</p>
