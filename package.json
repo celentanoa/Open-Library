@@ -5,14 +5,14 @@
   "main": "src/app.js",
   "scripts": {
     "dev": "webpack serve --mode development",
-    "build": "NODE_ENV=production webpack --mode production",
-    "build:dev": "webpack --mode development",
-    "clean": "rimraf dist",
-    "preview": "npm run build && serve dist",
-    "sass:watch": "sass --watch src/css/:src/css/ --style expanded",
-    "sass:build": "sass src/css/:src/css/ --style compressed",
-    "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix"
+  "build": "webpack --mode production",
+  "build:dev": "webpack --mode development",
+  "clean": "rimraf dist",
+  "preview": "npm run build && serve dist",
+  "sass:watch": "sass --watch src/css/:src/css/ --style expanded",
+  "sass:build": "sass src/css/:src/css/ --style compressed",
+  "lint": "eslint src/**/*.js",
+  "lint:fix": "eslint src/**/*.js --fix"
   },
   "keywords": [
     "javascript",
