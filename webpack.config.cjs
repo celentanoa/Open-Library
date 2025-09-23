@@ -2,7 +2,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 const isProd = process.env.NODE_ENV === "production";
 
 module.exports = {
@@ -18,16 +17,38 @@ module.exports = {
   devtool: isProd ? "source-map" : "eval-cheap-module-source-map",
   module: {
     rules: [
+      // 🔹 Transpila solo i file JS con Babel
       {
-        test: /\.css$/i,
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components|\.s[ac]ss$)/, // 👈 così evita gli SCSS
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      // 🔹 Gestisce SCSS
+      {
+        test: /\.s[ac]ss$/i,
         use: [
           isProd ? MiniCssExtractPlugin.loader : "style-loader",
           "css-loader",
+          "sass-loader",
         ],
       },
-      { test: /\.(png|jpe?g|gif|svg|ico)$/i, type: "asset/resource" },
+      // 🔹 Gestisce immagini e icone
+      {
+        test: /\.(png|jpe?g|gif|svg|ico)$/i,
+        type: "asset/resource",
+      },
     ],
   },
+
+  resolve: {
+    extensions: [".js", ".json"],
+  },
+
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

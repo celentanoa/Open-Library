@@ -1,115 +1,43 @@
-require("./style.css");
+// Importa stili e librerie
+import "./main.scss";
+import debounce from "lodash/debounce";
+import { fetchBooks, fetchBookDetails } from "./api.js";
+import {
+  sanitizeInput,
+  escapeHtml,
+  showMessage,
+  showLoading,
+  updateState,
+} from "./utility.js";
 
-// VARIABILI GLOBALI
-const API_URL = "https://openlibrary.org";
+//constanti per gli elementi DOM
+const elements = {
+  input: document.getElementById("categoria"), // Input di ricerca
+  searchBtn: document.getElementById("searchBtn"), // Bottone di ricerca
+  backBtn: document.getElementById("backBtn"), // Bottone indietro
+  risultatiDiv: document.getElementById("risultati"), // Div risultati
+  dettagliDiv: document.getElementById("dettagliLibri"), // Div dettagli
+  statusDiv: document.getElementById("status-messages"), // Div messaggi di stato
+};
+// VARIABILI e COSTANTI
 const MAX_RESULTS = 12;
 const MIN_SEARCH_LENGTH = 2;
-
-let currentState = "home"; // 'home', 'results', 'details'
+let currentState = "home"; // valori possibili: 'home', 'results', 'details'
 let currentCategory = "";
 let allBooks = [];
 let searchCache = new Map();
 
-const elements = {
-  input: document.getElementById("categoria"),
-  searchBtn: document.getElementById("searchBtn"),
-  backBtn: document.getElementById("backBtn"),
-  risultatiDiv: document.getElementById("risultati"),
-  dettagliDiv: document.getElementById("dettagliLibri"),
-  statusDiv: document.getElementById("status-messages"),
-};
-
-//FUNCTIONS
-
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
-
-function sanitizeInput(input) {
-  return input
-    .trim()
-    .replace(/[<>"']/g, "")
-    .toLowerCase();
-}
-
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function showMessage(message, type = "info") {
-  elements.statusDiv.innerHTML = `
-    <div class="status-message status-message--${type} fade-in">
-      ${escapeHtml(message)}
-    </div>
-  `;
-
-  // Auto-rimuovi messaggi di successo
-  if (type === "success") {
-    setTimeout(() => (elements.statusDiv.innerHTML = ""), 5000);
-  }
-}
-
-function showLoading(container, message = "Caricamento...") {
-  container.innerHTML = `
-    <div class="loading-text fade-in">
-      <div class="spinner"></div>
-      <span>${message}</span>
-    </div>
-  `;
-}
-
-function updateState(newState) {
-  currentState = newState;
-  elements.backBtn.style.display = newState === "home" ? "none" : "inline-flex";
-  elements.searchBtn.disabled = newState === "loading";
-}
-
-// API FUNCTIONS
-
-async function fetchBooks(category) {
-  const url = `${API_URL}/subjects/${encodeURIComponent(category)}.json`;
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const data = await response.json();
-  if (!data.works || data.works.length === 0) {
-    throw new Error("NO_RESULTS");
-  }
-
-  return data.works;
-}
-
-async function fetchBookDetails(bookKey) {
-  const url = `${API_URL}${bookKey}.json`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  return response.json();
-}
-
 // UI FUNCTIONS
-
+// Crea card libro
 function createBookCard(book, index) {
-  const card = document.createElement("div");
-  card.className = "libro-item";
+  const card = document.createElement("div"); // Crea card
+  card.className = "libro-item"; // Classe per stile e animazioni
 
-  const title = book.title || "Titolo non disponibile";
-  const authors = book.authors
-    ? book.authors.map((a) => a.name).join(", ")
+  const title = book.title || "Titolo non disponibile"; // Titolo
+  const authors = book.authors // Autori
+    ? book.authors.map((a) => a.name).join(", ") // Unisce nomi
     : "Autore non disponibile";
-
+  // Contenuto card
   card.innerHTML = `
     <h3>${escapeHtml(title)}</h3>
     <p><strong>Autori:</strong> ${escapeHtml(authors)}</p>
@@ -117,34 +45,33 @@ function createBookCard(book, index) {
       <span class="btn__text">Visualizza Dettagli</span>
       <span class="btn__loading">Caricamento...</span>
     </button>
-  `;
+  `; // Aggiunge listener al botton e apre dettagli
+  // Apre dettagli al click sul bottone della
 
-  // Event listener
   card
     .querySelector("button")
     .addEventListener("click", () => handleShowDetails(book.key));
 
-  elements.risultatiDiv.appendChild(card);
-
-  // Animazione cascata
-  setTimeout(() => card.classList.add("show"), index * 100);
+  elements.risultatiDiv.appendChild(card); // Aggiunge alla pagina
+  setTimeout(() => card.classList.add("show"), index * 100); /// Animazione ingresso
 }
-
+// Mostra risultati ricerca
 function renderResults(books) {
-  elements.risultatiDiv.innerHTML = "";
-  elements.statusDiv.innerHTML = "";
+  elements.risultatiDiv.innerHTML = ""; // Pulisce risultati precedenti
+  elements.statusDiv.innerHTML = ""; // Pulisce messaggi di stato
 
-  const booksToShow = books.slice(0, MAX_RESULTS);
-  const total = books.length;
+  const booksToShow = books.slice(0, MAX_RESULTS); // Limita risultati
+  const total = books.length; // Numero totale risultati
 
   // Messaggio risultati
   if (total > MAX_RESULTS) {
     showMessage(
+      elements.statusDiv,
       `Trovati ${total} libri. Mostrando i primi ${MAX_RESULTS}.`,
       "info"
     );
   } else {
-    showMessage(`Trovati ${total} libri.`, "success");
+    showMessage(elements.statusDiv, `Trovati ${total} libri.`, "success");
   }
 
   // Crea cards
@@ -152,17 +79,18 @@ function renderResults(books) {
 }
 
 function renderBookDetails(bookData, title) {
-  elements.risultatiDiv.innerHTML = "";
-  elements.dettagliDiv.innerHTML = "";
-  elements.statusDiv.innerHTML = "";
+  elements.risultatiDiv.innerHTML = ""; // Pulisce risultati
+  elements.dettagliDiv.innerHTML = ""; // Pulisce dettagli precedenti
+  elements.statusDiv.innerHTML = ""; // Pulisce messaggi di stato
 
   // Estrai descrizione
   let description = "Descrizione non disponibile.";
+  // La descrizione può essere stringa o oggetto
   if (bookData.description) {
     if (typeof bookData.description === "string") {
-      description = bookData.description;
+      description = bookData.description; // Se è stringa
     } else if (bookData.description.value) {
-      description = bookData.description.value;
+      description = bookData.description.value; // Se è oggetto con valore
     }
   }
 
@@ -170,7 +98,7 @@ function renderBookDetails(bookData, title) {
   if (description.length > 1000) {
     description = description.substring(0, 1000) + "...";
   }
-
+  // Crea dettagli
   elements.dettagliDiv.innerHTML = `
     <div class="book-details fade-in">
       <h2>${escapeHtml(title)}</h2>
@@ -179,18 +107,18 @@ function renderBookDetails(bookData, title) {
         <p>${escapeHtml(description)}</p>
       </div>
       ${
-        bookData.first_publish_date
+        bookData.first_publish_date // Data di prima pubblicazione
           ? `<p><strong>Prima pubblicazione:</strong> ${escapeHtml(
               bookData.first_publish_date
-            )}</p>`
+            )}</p>` // Mostra solo se disponibile
           : ""
       }
     </div>
   `;
 
-  elements.dettagliDiv.classList.add("show");
+  elements.dettagliDiv.classList.add("show"); // Mostra dettagli
 }
-
+// Pulisce interfaccia
 function clearInterface() {
   elements.risultatiDiv.innerHTML = "";
   elements.dettagliDiv.innerHTML = "";
@@ -201,104 +129,113 @@ function clearInterface() {
 
 // EVENT HANDLERS
 
+//Gestione ricerca
 async function handleSearch() {
-  const input = elements.input.value;
-  const category = sanitizeInput(input);
-
-  // Validazione
+  const input = elements.input.value; // Prende input
+  const category = sanitizeInput(input); // Sanifica input
+  // Controlla input
   if (!category || category.length < MIN_SEARCH_LENGTH) {
-    showMessage("Inserisci almeno 2 caratteri per la ricerca.", "error");
-    elements.input.focus();
-    return;
+    showMessage(
+      elements.statusDiv,
+      "Inserisci almeno 2 caratteri per la ricerca.",
+      "error"
+    ); // Mostra errore
+    elements.input.focus(); // Focus input
+    return; // Esce dalla funzione
   }
-
-  // Cache check
+  // Evita ricerche duplicate
   if (searchCache.has(category)) {
-    console.log("Using cached results");
-    allBooks = searchCache.get(category);
-    currentCategory = category;
-    updateState("results");
-    renderResults(allBooks);
-    return;
+    allBooks = searchCache.get(category); // Recupera da cache
+    currentState = updateState("results", elements); // Aggiorna stato
+    renderResults(allBooks); // Mostra risultati
+    return; // Esce dalla funzione
   }
 
-  // Loading state
-  updateState("loading");
-  currentCategory = category;
-  showLoading(elements.risultatiDiv, "Cercando libri...");
-  elements.statusDiv.innerHTML = "";
+  currentState = updateState("loading", elements); // Stato caricamento
+  showLoading(elements.risultatiDiv, "Cercando libri..."); // Mostra caricamento
+  elements.statusDiv.innerHTML = ""; // Pulisce messaggi di stato
 
+  // Effettua ricerca
   try {
-    const books = await fetchBooks(category);
+    const books = await fetchBooks(category); // Chiamata API
 
-    // Salva in cache (max 5 ricerche)
     if (searchCache.size >= 5) {
-      const firstKey = searchCache.keys().next().value;
-      searchCache.delete(firstKey);
+      const firstKey = searchCache.keys().next().value; // Rimuove la voce più vecchia
+      searchCache.delete(firstKey); // Mantiene la cache piccola
     }
     searchCache.set(category, books);
 
     allBooks = books;
-    updateState("results");
-    renderResults(books);
+    currentState = updateState("results", elements); // Aggiorna stato
+    renderResults(books); // Mostra risultati
   } catch (error) {
-    console.error("Search error:", error);
-    elements.risultatiDiv.innerHTML = "";
+    console.error("Search error:", error); // Log errore
+    elements.risultatiDiv.innerHTML = ""; // Pulisce risultati
 
     if (error.message === "NO_RESULTS") {
       showMessage(
-        `Nessun libro trovato per "${input}". Prova con un termine diverso.`,
+        elements.statusDiv,
+        `Nessun libro trovato per "${input}".`,
+        "error"
+      ); // Messaggio nessun risultato
+    } else {
+      showMessage(
+        elements.statusDiv,
+        "Errore durante la ricerca. Riprova più tardi.",
         "error"
       );
-    } else {
-      showMessage("Errore durante la ricerca. Riprova più tardi.", "error");
-    }
-
-    updateState("home");
+    } // Messaggio errore generico
+    currentState = updateState("home", elements); // Torna a stato iniziale
   }
 }
 
+// Gestione apertura dettagli libro
 async function handleShowDetails(bookKey) {
-  const book = allBooks.find((b) => b.key === bookKey);
-  const bookTitle = book ? book.title : "Libro";
+  const book = allBooks.find((b) => b.key === bookKey); // Trova libro
+  const bookTitle = book ? book.title : "Libro"; // Titolo per header
 
-  updateState("loading");
-  showLoading(elements.risultatiDiv, "Caricando dettagli...");
+  currentState = updateState("loading", elements); // Stato caricamento
+  showLoading(elements.risultatiDiv, "Caricando dettagli..."); // Mostra caricamento
 
   try {
-    const details = await fetchBookDetails(bookKey);
-    updateState("details");
-    renderBookDetails(details, bookTitle);
+    const details = await fetchBookDetails(bookKey); // Chiamata API
+    currentState = updateState("details", elements); // Aggiorna stato
+    renderBookDetails(details, bookTitle); // Mostra dettagli
   } catch (error) {
-    console.error("Details error:", error);
-    showMessage("Errore nel caricamento dei dettagli.", "error");
-    updateState("results");
-    renderResults(allBooks);
+    console.error("Details error:", error); // Log errore
+    showMessage(
+      elements.statusDiv,
+      "Errore nel caricamento dei dettagli.",
+      "error"
+    ); // Messaggio errore
+    currentState = updateState("results", elements); // Torna a risultati
+    renderResults(allBooks); // Mostra risultati
   }
 }
 
+//Gestione ritorno indietro
 function handleBack() {
   if (currentState === "details") {
-    updateState("results");
-    renderResults(allBooks);
+    currentState = updateState("results", elements); // Torna a risultati
+    renderResults(allBooks); // Mostra risultati
   } else {
-    updateState("home");
-    clearInterface();
+    currentState = updateState("home", elements); // Torna a home
+    clearInterface(); // Pulisce interfaccia
   }
 }
 
-function init() {
-  console.log("Inizializzazione CercaLibro...");
+function main() {
+  console.log("Inizializzazione CercaLibro..."); // Messaggio console
 
   // Event listeners
-  elements.searchBtn.addEventListener("click", handleSearch);
-  elements.backBtn.addEventListener("click", handleBack);
+  elements.searchBtn.addEventListener("click", handleSearch); // Cerca al click
+  elements.backBtn.addEventListener("click", handleBack); // Indietro al click
 
   // Enter per cercare
   elements.input.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
-      e.preventDefault();
-      handleSearch();
+      e.preventDefault(); // Previene submit form
+      handleSearch(); // Avvia ricerca
     }
   });
 
@@ -309,20 +246,15 @@ function init() {
       const errorMessages = elements.statusDiv.querySelectorAll(
         ".status-message--error"
       );
-      errorMessages.forEach((msg) => msg.remove());
-    }, 500)
+      errorMessages.forEach((msg) => msg.remove()); // Rimuove messaggi di errore
+    }, 500) // Debounce per evitare troppi eventi
   );
 
   // Stato iniziale
-  updateState("home");
-  elements.input.focus();
 
-  console.log("CercaLibro inizializzato!");
+  currentState = updateState("home", elements); // Imposta stato iniziale
+  elements.input.focus(); // Focus input
+  console.log("CercaLibro inizializzato!"); // Messaggio console
 }
 
-// Avvio
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
+document.addEventListener("DOMContentLoaded", main); // Avvia quando DOM è pronto

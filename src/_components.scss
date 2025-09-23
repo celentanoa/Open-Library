@@ -1,0 +1,200 @@
+/* COMPONENTS */
+@use 'utilities';
+
+/* Bottoni */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  min-height: 44px;
+  text-decoration: none;
+  position: relative;
+
+  @include utilities.btn-hover-active; //per non causare ulteriori errori di compilazione con use@, ho utilizzato il namespace
+  @include utilities.focus-visible; //anche qui
+
+  // Stati
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &__loading {
+    position: absolute; // Posiziona sopra il testo
+    opacity: 0;
+    transition: var(--transition); // Transizione per l'opacità
+  }
+
+  &--loading {
+    .btn__text {
+      opacity: 0;
+    }
+
+    .btn__loading {
+      opacity: 1;
+    }
+  }
+
+  /* Varianti */
+  &--primary {
+    background: var(--primary);
+    color: var(--white);
+
+    &:hover:not(:disabled) {
+      background: var(--primary-dark);
+      box-shadow: var(--shadow);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--gray-600);
+    border-color: var(--gray-300);
+
+    &:hover:not(:disabled) {
+      background: var(--gray-100);
+    }
+  }
+
+  &--secondary {
+    background: var(--gray-600);
+    color: var(--white);
+
+    &:hover:not(:disabled) {
+      background: var(--gray-900);
+    }
+  }
+}
+
+.search-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+/* Messaggi di stato */
+.status-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+
+  &--error {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+  }
+
+  &--success {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+  }
+
+  &--info {
+    background: rgba(0, 123, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(0, 123, 255, 0.2);
+  }
+}
+
+/* Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-300);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--gray-600);
+  margin: 2rem 0;
+}
+
+/* Risultati e dettagli */
+.risultati-container {
+  margin-top: 2rem;
+}
+
+.libro-item {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+  opacity: 0;
+  transform: translateY(20px);
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    color: var(--gray-600);
+  }
+}
+
+.dettagli-container {
+  margin-top: 2rem;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  h2 {
+    margin-top: 0;
+    color: var(--primary);
+    border-bottom: 2px solid var(--gray-300);
+    padding-bottom: 1rem;
+  }
+}
