@@ -1,4 +1,4 @@
-# 📚 CercaLibro
+#  CercaLibro
 
 > Web app per cercare libri per **categoria** tramite Open Library — build con **Webpack 5**, deploy su **Firebase Hosting**.
 
@@ -9,21 +9,21 @@
 [![Webpack](https://img.shields.io/badge/Build-Webpack_5-1f78c1?logo=webpack&logoColor=white)](https://webpack.js.org/)
 [![Firebase Hosting](https://img.shields.io/badge/Hosting-Firebase-ffca28?logo=firebase&logoColor=black)](https://firebase.google.com/docs/hosting)
 
-## 🌐 Live Demo
-👉 **https://open-library-703b1.web.app**
+## Live Demo
+**https://open-library-703b1.web.app**
 
 ---
 
-## 🌟 Caratteristiche
-- **🔍 Ricerca** per categoria con gestione stati (loading, error, empty)
-- **📱 Responsive** (mobile-first con Grid/Flexbox)
-- **♿ Accessibilità**: HTML semantico, ARIA, focus visibile
-- **⚡ Performance**: debounce input, rendering efficiente
-- **🧩 Build moderna**: bundling, minificazione, estrazione CSS, static assets
+##  Caratteristiche
+- ** Ricerca** per categoria con gestione stati (loading, error, empty)
+- ** Responsive** (mobile-first con Grid/Flexbox)
+- ** Accessibilità**: HTML semantico, ARIA, focus visibile
+- ** Performance**: debounce input, rendering efficiente
+- ** Build moderna**: bundling, minificazione, estrazione CSS, static assets
 
 ---
 
-## 🛠️ Stack
+##  Stack
 - **Frontend**: HTML5, CSS3, JavaScript ES6+
 - **Build**: Webpack 5 (`html-webpack-plugin`, `mini-css-extract-plugin`, `css-loader`, `style-loader`, `webpack-dev-server`)
 - **Hosting**: Firebase Hosting
@@ -31,7 +31,7 @@
 
 ---
 
-## 🚀 Avvio rapido
+## Avvio rapido
 
 > **Requisiti:** Node.js 18+ consigliato
 
@@ -51,20 +51,25 @@ npm run preview       # → http://localhost:5000
 
 ---
 
-## 📁 Struttura del Progetto
+##  Struttura del Progetto
 ```
 .
 ├─ public/
 │  ├─ index.html            # template HTML usato da HtmlWebpackPlugin
-│  └─ 404.html              # (opzionale) pagina per URL inesistenti
-│                           # Metti qui anche favicon, robots.txt, manifest.json, ecc.
+│  └─ favicon               #favicon
+│                           
 │
 ├─ src/
 │  ├─ app.js                # logica dell'app (importa gli stili)
-│  ├─ style.css             # stili principali
-│  └─ assets/               # (opzionale) immagini/font sorgente
-│      ├─ img/
-│      └─ fonts/
+│  ├─ api.js                # logica chiamata API
+│  └─ utility.js            # 
+│  └─ main.scss             # importa i partial sass
+│  └─ _variables.scss       # variabili di stile
+│  └─ _components.scss      # button, div
+│  └─ _layout.scss          # flexbox
+│  └─ _typography.scss      # font e stili
+│  └─ utilities.scss        # 
+│  └─ mixins.scss           # media queries
 │
 ├─ dist/                    # (GENERATA) output di build pronto per il deploy
 │  ├─ index.html
@@ -78,25 +83,27 @@ npm run preview       # → http://localhost:5000
 ├─ package.json             # script e dipendenze
 ├─ package-lock.json
 └─ .gitignore               # ignora node_modules/, dist/, .firebase/
+└─ babelconfig.json
+└─ 
 ```
 
 ---
 
-## 🎯 Funzionalità Principali
+## Funzionalità Principali
 
-### 🔍 Ricerca Libri
+### Ricerca Libri
 - Ricerca per categoria con minimo 2 caratteri
 - Sistema di cache per risultati frequenti
 - Gestione errori con messaggi chiari
 - Limitazione risultati (12 per ricerca)
 
-### 📖 Visualizzazione
+### Visualizzazione
 - Lista risultati con animazioni a cascata
 - Dettagli libro con descrizione completa
 - Navigazione fluida tra sezioni
 - Stati di loading con spinner
 
-### ♿ Accessibilità
+### Accessibilità
 - Navigazione completa da tastiera
 - Screen reader friendly
 - Alto contrasto e focus visibili
@@ -110,7 +117,7 @@ npm run preview       # → http://localhost:5000
 
 ---
 
-## 🔧 Deploy su Firebase
+## Deploy su Firebase
 
 Prerequisiti (una tantum):
 - `firebase login`
@@ -127,14 +134,14 @@ firebase deploy
 
 ---
 
-## 🆘 Troubleshooting
+## Troubleshooting
 - **Porta occupata (EADDRINUSE: 5173)** → `npm run dev -- --port 5174` oppure cambia `devServer.port`.
 - **PowerShell blocca npm.ps1** → usa **cmd.exe** o `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`.
 - **Webpack: "'import' may appear only with 'sourceType: module'"** → usa `require('./style.css')`, oppure aggiungi `{ test: /.js$/, type: 'javascript/auto' }`, oppure rinomina `app.js` in `app.mjs` e aggiorna l'entry.
 
 ---
 
-## 🙏 Riconoscimenti
+## Riconoscimenti
 - **Open Library** per l'API gratuita
 - **Community** per feedback e suggerimenti
 - **Icone** da [Lucide Icons](https://lucide.dev/)
