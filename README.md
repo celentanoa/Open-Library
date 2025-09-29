@@ -62,20 +62,20 @@ npm run preview       # → http://localhost:5000
 ├─ src/
 │  ├─ app.js                # logica dell'app (importa gli stili)
 │  ├─ api.js                # logica chiamata API
-│  └─ utility.js            # 
+│  └─ utility.js            # logica stato di caricamento e messaggi
 │  └─ main.scss             # importa i partial sass
 │  └─ _variables.scss       # variabili di stile
-│  └─ _components.scss      # button, div
-│  └─ _layout.scss          # flexbox
+│  └─ _components.scss      # gestisce i componenti dell'app come bottoni/textbox
+│  └─ _layout.scss          # gestisce il layout delle varie sezioni
 │  └─ _typography.scss      # font e stili
-│  └─ utilities.scss        # 
-│  └─ mixins.scss           # media queries
+│  └─ utilities.scss        # usato per fare il forward e rendere le variabili globali
+│  └─ mixins.scss           # mixin hover e focus
 │
-├─ dist/                    # (GENERATA) output di build pronto per il deploy
+├─ dist/                    
 │  ├─ index.html
 │  └─ assets/
-│     ├─ js/                # bundle JS (hash in produzione)
-│     └─ css/               # CSS estratto (hash in produzione)
+│     ├─ js/                # bundle JS 
+│     └─ css/               # CSS estratto 
 │
 ├─ webpack.config.js        # configurazione build (dev/prod, loader, plugin)
 ├─ firebase.json            # configurazione Firebase Hosting
@@ -83,8 +83,8 @@ npm run preview       # → http://localhost:5000
 ├─ package.json             # script e dipendenze
 ├─ package-lock.json
 └─ .gitignore               # ignora node_modules/, dist/, .firebase/
+└─ .gitattributes
 └─ babelconfig.json
-└─ 
 ```
 
 ---
@@ -109,7 +109,7 @@ npm run preview       # → http://localhost:5000
 - Alto contrasto e focus visibili
 - ARIA labels e ruoli semantici
 
-### 📱 Responsive Design
+### Responsive Design
 - Layout mobile-first
 - Breakpoint: 768px, 480px
 - Touch-friendly su dispositivi mobili
@@ -143,8 +143,6 @@ firebase deploy
 
 ## Riconoscimenti
 - **Open Library** per l'API gratuita
-- **Community** per feedback e suggerimenti
-- **Icone** da [Lucide Icons](https://lucide.dev/)
 
 ## 📜 Licenza
 MIT — vedi [LICENSE](LICENSE).
