@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const isProd = process.env.NODE_ENV === "production";
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: "./src/app.js",
@@ -54,6 +55,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "public/index.html",
       filename: "index.html",
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "public/favicon.ico",
+          to: "favicon.ico",
+        },
+      ],
     }),
     ...(isProd
       ? [
